@@ -2,7 +2,7 @@ openapi: 3.1.0
 info:
   title: MusePicker API
   version: 1.0.0
-  description: Public API for MusePicker metasearch.
+  description: Public API for MusePicker activity-ticket metasearch.
 servers:
   - url: https://api.musepicker.com
   - url: http://localhost:8080
@@ -20,6 +20,9 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/RegionCity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
   /api/activities/trending:
     get:
       summary: Get trending activities
@@ -33,6 +36,9 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/TrendingActivity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
   /api/activities/search:
     get:
       summary: Search activities
@@ -80,6 +86,25 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PagedActivitySearch'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      summary: Compatibility alias for legacy clients
+      operationId: searchActivitiesCompatibility
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedActivitySearch'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
   /api/activities/{activityId}:
     get:
       summary: Get activity detail
@@ -99,7 +124,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/ActivityDetail'
         '404':
-          description: Not found
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
   /api/activities/{activityId}/offers:
     get:
       summary: Get activity offers sorted by deterministic price ranking
@@ -125,6 +153,36 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Offer'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /api/activities/{activityId}/tickets:
+    get:
+      summary: Compatibility alias for legacy clients
+      operationId: getActivityTicketsCompatibility
+      parameters:
+        - in: path
+          name: activityId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Offer'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
   /api/platforms:
     get:
       summary: List enabled platforms
@@ -138,8 +196,164 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Platform'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /api/affiliate/out/{offerId}:
+    get:
+      summary: Track affiliate click and redirect to partner destination
+      operationId: trackAffiliateClickAndRedirect
+      parameters:
+        - in: path
+          name: offerId
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - in: query
+          name: target
+          required: true
+          schema:
+            type: string
+            format: uri
+        - in: query
+          name: platform
+          schema:
+            type: string
+      responses:
+        '302':
+          description: Redirect to affiliate destination with MusePicker click params
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /api/mualba/activities:
+    get:
+      summary: Export canonical MUALBA activity definitions
+      operationId: listMualbaActivities
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MualbaCanonicalActivity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /api/admin/sources/health:
+    get:
+      summary: Backoffice source health summary
+      operationId: getSourceHealth
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SourceHealth'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /api/admin/mappings/review:
+    get:
+      summary: Backoffice queue of source activities requiring canonical mapping review
+      operationId: getMappingReviewQueue
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MappingReviewItem'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /api/admin/mappings/override:
+    post:
+      summary: Apply manual source-to-canonical mapping override
+      operationId: applyMappingOverride
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MappingOverrideRequest'
+      responses:
+        '200':
+          description: Override applied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MappingReviewItem'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /api/admin/offers/anomalies:
+    get:
+      summary: Backoffice queue of anomalous offers
+      operationId: getOfferAnomalies
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OfferAnomaly'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
 components:
+  responses:
+    BadRequest:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+    InternalServerError:
+      description: Unexpected server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
   schemas:
+    ErrorEnvelope:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        requestId:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+      required:
+        - code
+        - message
+        - requestId
+        - timestamp
     RegionCity:
       type: object
       properties:
@@ -158,7 +372,12 @@ components:
             type: string
         lowestPrice:
           type: number
-      required: [id, city, totalCount, categories, lowestPrice]
+      required:
+        - id
+        - city
+        - totalCount
+        - categories
+        - lowestPrice
     TrendingActivity:
       type: object
       properties:
@@ -173,7 +392,12 @@ components:
           type: number
         discountRate:
           type: number
-      required: [id, name, image, lowestPrice, discountRate]
+      required:
+        - id
+        - name
+        - image
+        - lowestPrice
+        - discountRate
     TicketPreview:
       type: object
       properties:
@@ -181,7 +405,9 @@ components:
           type: string
         price:
           type: number
-      required: [platformName, price]
+      required:
+        - platformName
+        - price
     ActivitySearchItem:
       type: object
       properties:
@@ -204,7 +430,13 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/TicketPreview'
-      required: [id, name, city, ticketTypeCount, platformCount, ticketPreview]
+      required:
+        - id
+        - name
+        - city
+        - ticketTypeCount
+        - platformCount
+        - ticketPreview
     PagedActivitySearch:
       type: object
       properties:
@@ -220,7 +452,12 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ActivitySearchItem'
-      required: [page, size, totalElements, totalPages, items]
+      required:
+        - page
+        - size
+        - totalElements
+        - totalPages
+        - items
     ActivityDetail:
       type: object
       properties:
@@ -241,7 +478,12 @@ components:
             type: string
         region:
           $ref: '#/components/schemas/RegionCity'
-      required: [id, name, images, categories, region]
+      required:
+        - id
+        - name
+        - images
+        - categories
+        - region
     Offer:
       type: object
       properties:
@@ -269,7 +511,16 @@ components:
         affiliateUrl:
           type: string
           format: uri
-      required: [id, activityId, platform, ticketType, date, basePrice, feeAmount, discountAmount, effectivePrice, affiliateUrl]
+      required:
+        - id
+        - activityId
+        - platform
+        - ticketType
+        - basePrice
+        - feeAmount
+        - discountAmount
+        - effectivePrice
+        - affiliateUrl
     Platform:
       type: object
       properties:
@@ -283,4 +534,103 @@ components:
         homepageUrl:
           type: string
           format: uri
-      required: [id, code, name, homepageUrl]
+      required:
+        - id
+        - code
+        - name
+        - homepageUrl
+    MualbaCanonicalActivity:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        slug:
+          type: string
+        name:
+          type: string
+        canonicalCategory:
+          type: string
+        status:
+          type: string
+      required:
+        - id
+        - slug
+        - name
+        - canonicalCategory
+        - status
+    SourceHealth:
+      type: object
+      properties:
+        source:
+          type: string
+        rawOfferCount:
+          type: integer
+        mappedCount:
+          type: integer
+        unmappedCount:
+          type: integer
+      required:
+        - source
+        - rawOfferCount
+        - mappedCount
+        - unmappedCount
+    MappingReviewItem:
+      type: object
+      properties:
+        source:
+          type: string
+        sourceActivityId:
+          type: string
+        coreActivityId:
+          type: string
+          nullable: true
+        mualbaActivityId:
+          type: string
+          nullable: true
+      required:
+        - source
+        - sourceActivityId
+    MappingOverrideRequest:
+      type: object
+      anyOf:
+        - required: [coreActivityId]
+        - required: [mualbaActivityId]
+      properties:
+        source:
+          type: string
+        sourceActivityId:
+          type: string
+        coreActivityId:
+          type: string
+          format: uuid
+          nullable: true
+        mualbaActivityId:
+          type: string
+          format: uuid
+          nullable: true
+        confidenceScore:
+          type: number
+          minimum: 0
+          maximum: 1
+          nullable: true
+      required:
+        - source
+        - sourceActivityId
+    OfferAnomaly:
+      type: object
+      properties:
+        offerId:
+          type: string
+          format: uuid
+        reason:
+          type: string
+        effectivePrice:
+          type: number
+        availability:
+          type: integer
+      required:
+        - offerId
+        - reason
+        - effectivePrice
+        - availability

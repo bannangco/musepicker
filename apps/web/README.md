@@ -12,8 +12,11 @@ Next.js App Router frontend for MusePicker.
   - `/city/[city]`
   - `/category/[category]`
   - `/activity/[activityId]`
-- Affiliate outbound tracking redirect:
-  - `/out/[offerId]?target=<affiliate-url>&platform=<platform-code>`
+- Backoffice overview page:
+  - `/admin`
+- Affiliate outbound tracking:
+  - primary contract: `GET {API_BASE_URL}/api/affiliate/out/{offerId}?target=<affiliate-url>&platform=<platform-code>`
+  - compatibility alias: `/out/[offerId]?target=<affiliate-url>&platform=<platform-code>`
 
 ## Run
 

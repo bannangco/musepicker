@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://contracts.musepicker.com/schemas/error-envelope.schema.json",
+  "title": "ErrorEnvelope",
+  "type": "object",
+  "required": ["code", "message", "requestId", "timestamp"],
+  "properties": {
+    "code": { "type": "string" },
+    "message": { "type": "string" },
+    "requestId": { "type": "string" },
+    "timestamp": { "type": "string", "format": "date-time" }
+  }
+}

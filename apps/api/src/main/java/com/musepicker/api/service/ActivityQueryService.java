@@ -131,8 +131,10 @@ public class ActivityQueryService {
         return offers.stream()
             .sorted(Comparator
                 .comparing(CoreOffer::effectivePrice)
+                .thenComparing(CoreOffer::getAvailability, Comparator.nullsLast(Comparator.reverseOrder()))
                 .thenComparing(o -> o.getPlatform().getCode())
                 .thenComparing(CoreOffer::getLastSeenAt, Comparator.reverseOrder())
+                .thenComparing(CoreOffer::getId)
             )
             .map(this::toOfferResponse)
             .toList();
@@ -184,7 +186,7 @@ public class ActivityQueryService {
             offer.getFeeAmount(),
             offer.getDiscountAmount(),
             offer.effectivePrice(),
-            offer.getAffiliateUrl()
+            normalizeAffiliateUrl(offer.getAffiliateUrl())
         );
     }
 
@@ -197,5 +199,12 @@ public class ActivityQueryService {
             return null;
         }
         return value;
+    }
+
+    private static String normalizeAffiliateUrl(String value) {
+        if (value == null || value.isBlank()) {
+            return "";
+        }
+        return value.trim();
     }
 }

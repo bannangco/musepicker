@@ -38,6 +38,12 @@ Single DB now, split-ready later:
 - `GET /api/activities/{activityId}`
 - `GET /api/activities/{activityId}/offers`
 - `GET /api/platforms`
+- `GET /api/affiliate/out/{offerId}` (click tracking + redirect)
+- `GET /api/mualba/activities` (canonical export surface)
+- `GET /api/admin/sources/health` (backoffice health)
+- `GET /api/admin/mappings/review` (backoffice review queue)
+- `POST /api/admin/mappings/override` (manual mapping hook)
+- `GET /api/admin/offers/anomalies` (backoffice anomaly queue)
 
 Compatibility aliases are retained for legacy consumers:
 
@@ -51,7 +57,9 @@ Compatibility aliases are retained for legacy consumers:
 3. Quality checks + dedup validation.
 4. Idempotency key check avoids duplicates.
 5. Snapshot append for trend/anomaly history.
-6. Run logs + per-source health metrics updated.
+6. Canonical mapping confidence generated; low-confidence items land in review queue.
+7. Dead-letter entries capture quality and adapter failures for replay.
+8. Run logs + per-source health metrics updated.
 
 ## Security Phase 0 Status
 

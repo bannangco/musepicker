@@ -25,5 +25,8 @@ class PriceRankingIntegrationTest {
 
         assertThat(offers).isNotEmpty();
         assertThat(offers.get(0).effectivePrice()).isLessThanOrEqualTo(offers.get(offers.size() - 1).effectivePrice());
+        if (offers.size() > 1 && offers.get(0).effectivePrice().compareTo(offers.get(1).effectivePrice()) == 0) {
+            assertThat(offers.get(0).platform().code()).isLessThanOrEqualTo(offers.get(1).platform().code());
+        }
     }
 }

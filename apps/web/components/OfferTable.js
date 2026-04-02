@@ -3,15 +3,7 @@
 import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
 import { formatMoney } from '@/lib/format';
-import { getActivityOffers } from '@/lib/api';
-
-function outboundHref(offer) {
-  const params = new URLSearchParams({
-    target: offer.affiliateUrl,
-    platform: offer.platform.code
-  });
-  return `/out/${offer.id}?${params.toString()}`;
-}
+import { buildAffiliateOutboundUrl, getActivityOffers } from '@/lib/api';
 
 export default function OfferTable({ activityId, date, initialOffers }) {
   const query = useQuery({
@@ -61,7 +53,12 @@ export default function OfferTable({ activityId, date, initialOffers }) {
                 <td>{offer.date ?? '-'}</td>
                 <td>{formatMoney(offer.effectivePrice)}</td>
                 <td>
-                  <Link className="outbound" href={outboundHref(offer)}>
+                  <Link
+                    className="outbound"
+                    href={buildAffiliateOutboundUrl(offer)}
+                    target="_blank"
+                    rel="nofollow sponsored noopener"
+                  >
                     Go to booking
                   </Link>
                 </td>

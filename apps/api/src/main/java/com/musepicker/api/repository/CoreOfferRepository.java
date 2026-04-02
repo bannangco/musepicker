@@ -50,4 +50,13 @@ public interface CoreOfferRepository extends JpaRepository<CoreOffer, UUID> {
         left join fetch o.schedule s
     """)
     List<CoreOffer> findAllForTrending();
+
+    @Query("""
+        select o from CoreOffer o
+        join fetch o.platform p
+        left join fetch o.ticketType tt
+        left join fetch o.schedule s
+        order by o.lastSeenAt desc
+    """)
+    List<CoreOffer> findAnomalyCandidates();
 }

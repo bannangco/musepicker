@@ -15,27 +15,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Block secret exfiltration patterns
+      - name: Enforce workflow policy
         run: |
-          set -euo pipefail
-          if grep -RInE "curl.+\$\{\{\s*secrets\." ".github/workflows" "musepicker_back/.github/workflows"; then
-            echo "Detected suspicious workflow command pattern."
-            exit 1
-          fi
+          chmod +x scripts/check_workflow_policy.sh
+          ./scripts/check_workflow_policy.sh
 
   contracts:
-    name: OpenAPI Contract Validation
+    name: Contracts Validation
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - name: Validate OpenAPI spec
+      - name: Validate OpenAPI spec and JSON schemas
         run: |
           python -m pip install --upgrade pip
-          pip install openapi-spec-validator
+          pip install openapi-spec-validator jsonschema
           python -m openapi_spec_validator packages/contracts/openapi/musepicker-v1.yaml
+          python packages/contracts/scripts/validate_schemas.py
 
   api_tests:
     name: API Tests

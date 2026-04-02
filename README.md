@@ -27,10 +27,12 @@ MusePicker is a metasearch platform for cultural activity tickets (museums, gall
   - API-first adapters (`klook`, `tripcom`, `ticketstodo`, `viator`)
   - scraper fallback adapter
   - retries/backoff, idempotency, snapshot persistence, health metrics
+  - dead-letter store, replay flow, canonical mapping confidence/review queue
   - contract/idempotency/data-quality test suite
 - Root CI workflows added:
   - security checks
   - OpenAPI contract validation
+  - JSON schema validation
   - API/web/ingest build-test gates
   - migration naming gate
 
@@ -89,3 +91,5 @@ python -m musepicker_ingest.pipeline.run_ingest --source klook --fixture tests/f
 ## Additional Docs
 
 - `docs/architecture.md`: rebuild architecture and reuse decisions
+- `docs/governance/`: policies, ADR, quality gates
+- `docs/operations/`: monitoring, launch gates, post-launch loop

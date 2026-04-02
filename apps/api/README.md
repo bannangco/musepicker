@@ -34,3 +34,9 @@ cd apps/api
 - `GET /api/activities/{activityId}`
 - `GET /api/activities/{activityId}/offers`
 - `GET /api/platforms`
+- `GET /api/affiliate/out/{offerId}`
+- `GET /api/mualba/activities`
+- `GET /api/admin/sources/health`
+- `GET /api/admin/mappings/review`
+- `POST /api/admin/mappings/override`
+- `GET /api/admin/offers/anomalies`

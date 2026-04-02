@@ -9,6 +9,7 @@
     "api:test": "cd apps/api && ./gradlew test",
     "web:dev": "npm --workspace apps/web run dev",
     "web:build": "npm --workspace apps/web run build",
-    "ingest:test": "cd apps/ingest && PYTHONPATH=. pytest -q tests"
+    "ingest:test": "cd apps/ingest && PYTHONPATH=. pytest -q tests",
+    "contracts:validate": "python3 packages/contracts/scripts/validate_schemas.py"
   }
 }

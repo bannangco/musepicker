@@ -33,6 +33,7 @@ export default function RootLayout({ children }) {
             </Link>
             <nav className="site-nav" aria-label="Primary">
               <Link href="/search">Search</Link>
+              <Link href="/admin">Admin</Link>
             </nav>
           </header>
           <main className="page-shell">{children}</main>

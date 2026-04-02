@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://contracts.musepicker.com/schemas/mualba-canonical-activity.schema.json",
+  "title": "MualbaCanonicalActivity",
+  "type": "object",
+  "required": ["id", "slug", "name", "canonical_category", "status"],
+  "properties": {
+    "id": { "type": "string", "format": "uuid" },
+    "slug": { "type": "string" },
+    "name": { "type": "string" },
+    "canonical_category": { "type": "string" },
+    "status": { "type": "string" }
+  }
+}

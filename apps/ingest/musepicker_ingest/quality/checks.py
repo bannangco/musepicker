@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
 from dataclasses import replace
 from decimal import Decimal
 import re
@@ -8,6 +9,12 @@ from musepicker_ingest.models import RawOffer
 
 
 _CURRENCY_PATTERN = re.compile(r"^[A-Z]{3}$")
+
+
+@dataclass(frozen=True)
+class RejectedOffer:
+    offer: RawOffer
+    errors: list[str]
 
 
 def validate_required_fields(offer: RawOffer) -> list[str]:
@@ -60,10 +67,24 @@ def dedupe_offers(offers: list[RawOffer]) -> list[RawOffer]:
 
 
 def check_data_quality(offers: list[RawOffer]) -> tuple[list[RawOffer], list[str]]:
+    accepted, rejected, errors = evaluate_offers(offers)
+    return accepted, errors
+
+
+def evaluate_offers(offers: list[RawOffer]) -> tuple[list[RawOffer], list[RejectedOffer], list[str]]:
     normalized = [normalize_offer(offer) for offer in offers]
     deduped = dedupe_offers(normalized)
+    accepted: list[RawOffer] = []
+    rejected: list[RejectedOffer] = []
     errors: list[str] = []
+
     for offer in deduped:
-        for error in validate_required_fields(offer):
-            errors.append(f"{offer.source}:{offer.source_offer_id}: {error}")
-    return deduped, errors
+        validation_errors = validate_required_fields(offer)
+        if validation_errors:
+            rejected.append(RejectedOffer(offer=offer, errors=validation_errors))
+            for error in validation_errors:
+                errors.append(f"{offer.source}:{offer.source_offer_id}: {error}")
+            continue
+        accepted.append(offer)
+
+    return accepted, rejected, errors

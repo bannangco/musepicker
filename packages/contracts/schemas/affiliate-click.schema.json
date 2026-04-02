@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://contracts.musepicker.com/schemas/affiliate-click.schema.json",
+  "title": "AffiliateClickEvent",
+  "type": "object",
+  "required": [
+    "click_id",
+    "offer_id",
+    "platform_code",
+    "target_url",
+    "request_id",
+    "created_at"
+  ],
+  "properties": {
+    "click_id": { "type": "string", "format": "uuid" },
+    "offer_id": { "type": "string", "format": "uuid" },
+    "platform_code": { "type": "string" },
+    "target_url": { "type": "string", "format": "uri" },
+    "request_id": { "type": "string" },
+    "referrer": { "type": ["string", "null"] },
+    "user_agent": { "type": ["string", "null"] },
+    "created_at": { "type": "string", "format": "date-time" }
+  }
+}

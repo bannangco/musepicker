@@ -41,6 +41,12 @@ public class SourceActivityMap {
     @JoinColumn(name = "mualba_activity_id")
     private MualbaCanonicalActivity mualbaActivity;
 
+    @Column(name = "confidence_score", precision = 5, scale = 4)
+    private java.math.BigDecimal confidenceScore;
+
+    @Column(name = "manual_override")
+    private Boolean manualOverride = Boolean.FALSE;
+
     public UUID getId() {
         return id;
     }
@@ -75,5 +81,21 @@ public class SourceActivityMap {
 
     public void setMualbaActivity(MualbaCanonicalActivity mualbaActivity) {
         this.mualbaActivity = mualbaActivity;
+    }
+
+    public java.math.BigDecimal getConfidenceScore() {
+        return confidenceScore;
+    }
+
+    public void setConfidenceScore(java.math.BigDecimal confidenceScore) {
+        this.confidenceScore = confidenceScore;
+    }
+
+    public Boolean getManualOverride() {
+        return manualOverride;
+    }
+
+    public void setManualOverride(Boolean manualOverride) {
+        this.manualOverride = manualOverride;
     }
 }

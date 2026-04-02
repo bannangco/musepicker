@@ -62,6 +62,44 @@ class RawOffer:
             "observed_at": self.observed_at.isoformat()
         }
 
+    @classmethod
+    def from_dict(cls, payload: dict[str, Any]) -> "RawOffer":
+        if not isinstance(payload, dict):
+            raise ValueError("payload must be an object")
+
+        observed_at_raw = payload.get("observed_at")
+        observed_at = datetime.now(timezone.utc)
+        if isinstance(observed_at_raw, str) and observed_at_raw.strip():
+            observed_at = datetime.fromisoformat(observed_at_raw.replace("Z", "+00:00"))
+
+        start_date_raw = payload.get("start_date")
+        parsed_start_date: date | None = None
+        if isinstance(start_date_raw, str) and start_date_raw.strip():
+            parsed_start_date = date.fromisoformat(start_date_raw)
+
+        availability_raw = payload.get("availability")
+        availability: int | None = None
+        if availability_raw is not None and availability_raw != "":
+            availability = int(availability_raw)
+
+        return cls(
+            source=str(payload.get("source") or ""),
+            source_offer_id=str(payload.get("source_offer_id") or ""),
+            source_activity_id=str(payload.get("source_activity_id") or ""),
+            title=str(payload.get("title") or ""),
+            city=payload.get("city"),
+            category=payload.get("category"),
+            currency=str(payload.get("currency") or ""),
+            base_price=Decimal(str(payload.get("base_price") or "0")),
+            fee_amount=Decimal(str(payload.get("fee_amount") or "0")),
+            discount_amount=Decimal(str(payload.get("discount_amount") or "0")),
+            availability=availability,
+            start_date=parsed_start_date,
+            affiliate_url=str(payload.get("affiliate_url") or ""),
+            metadata=payload.get("metadata") if isinstance(payload.get("metadata"), dict) else {},
+            observed_at=observed_at
+        )
+
 
 @dataclass(frozen=True)
 class AdapterResult:
