@@ -6,12 +6,14 @@ Next.js App Router frontend for MusePicker.
 
 - URL-driven filter state (`city`, `category`, `query`, `date`, `pax`, paging)
 - React Query server-state for search and offer loading
-- Search/list pages:
+- Figma-referenced customer pages:
   - `/`
-  - `/search`
   - `/city/[city]`
+  - `/search`
   - `/category/[category]`
   - `/activity/[activityId]`
+- List pages include client-side sort controls (`price low-high`, `price high-low`, `best discount`) over loaded page items.
+- Activity detail includes grouped ticket offers, map/reviews/nearby placeholder sections, and nearby tickets strip.
 - Backoffice overview page:
   - `/admin`
 - Affiliate outbound tracking:

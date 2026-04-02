@@ -68,7 +68,7 @@ export default function SearchFilters({ initialValues = {}, compact = false }) {
           onChange={(event) => setPax(event.target.value)}
         />
       </label>
-      <button type="submit">Compare</button>
+      <button type="submit">{compact ? 'Update Search' : 'Compare Tickets'}</button>
     </form>
   );
 }

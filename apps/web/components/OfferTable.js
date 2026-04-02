@@ -2,8 +2,24 @@
 
 import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
-import { formatMoney } from '@/lib/format';
 import { buildAffiliateOutboundUrl, getActivityOffers } from '@/lib/api';
+import { formatMoney } from '@/lib/format';
+
+function groupOffers(offers) {
+  const map = new Map();
+  (offers ?? []).forEach((offer) => {
+    const key = offer.ticketType || 'General';
+    if (!map.has(key)) {
+      map.set(key, []);
+    }
+    map.get(key).push(offer);
+  });
+
+  return [...map.entries()].map(([ticketType, grouped]) => ({
+    ticketType,
+    offers: [...grouped].sort((a, b) => Number(a.effectivePrice) - Number(b.effectivePrice))
+  }));
+}
 
 export default function OfferTable({ activityId, date, initialOffers }) {
   const query = useQuery({
@@ -25,48 +41,42 @@ export default function OfferTable({ activityId, date, initialOffers }) {
   if (!offers.length) {
     return (
       <section className="panel">
-        <h2>Offers</h2>
+        <h2>Ticketed offers</h2>
         <p className="muted">No offers are currently available for this activity/date combination.</p>
       </section>
     );
   }
 
+  const groups = groupOffers(offers);
+
   return (
-    <section className="panel">
-      <h2>Offers</h2>
-      <div className="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Platform</th>
-              <th>Ticket Type</th>
-              <th>Date</th>
-              <th>Effective Price</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {offers.map((offer) => (
-              <tr key={offer.id}>
-                <td>{offer.platform.name}</td>
-                <td>{offer.ticketType}</td>
-                <td>{offer.date ?? '-'}</td>
-                <td>{formatMoney(offer.effectivePrice)}</td>
-                <td>
-                  <Link
-                    className="outbound"
-                    href={buildAffiliateOutboundUrl(offer)}
-                    target="_blank"
-                    rel="nofollow sponsored noopener"
-                  >
-                    Go to booking
-                  </Link>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+    <section className="stack-md">
+      {groups.map((group) => (
+        <section key={group.ticketType} className="offer-group">
+          <h3 className="offer-group-title">{group.ticketType}</h3>
+          {group.offers.map((offer) => (
+            <article key={offer.id} className="offer-item">
+              <div className="offer-top">
+                <div>
+                  <p className="offer-platform">{offer.platform.name}</p>
+                  <p className="offer-date">{offer.date ?? 'Flexible date'}</p>
+                </div>
+                <p className="offer-price">{formatMoney(offer.effectivePrice)}</p>
+              </div>
+              <div className="offer-footer">
+                <Link
+                  className="btn-primary"
+                  href={buildAffiliateOutboundUrl(offer)}
+                  target="_blank"
+                  rel="nofollow sponsored noopener"
+                >
+                  View deal
+                </Link>
+              </div>
+            </article>
+          ))}
+        </section>
+      ))}
     </section>
   );
 }

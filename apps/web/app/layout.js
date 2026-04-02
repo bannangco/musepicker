@@ -25,18 +25,33 @@ export default function RootLayout({ children }) {
     <html lang="en" className={`${serif.variable} ${sans.variable}`}>
       <body>
         <Providers>
-          <div className="bg-orb bg-orb-a" />
-          <div className="bg-orb bg-orb-b" />
+          <div className="bg-layer" />
           <header className="site-header">
-            <Link href="/" className="brand-link" aria-label="MusePicker home">
-              MusePicker
-            </Link>
-            <nav className="site-nav" aria-label="Primary">
-              <Link href="/search">Search</Link>
-              <Link href="/admin">Admin</Link>
-            </nav>
+            <div className="header-inner">
+              <Link href="/" className="brand-link" aria-label="MusePicker home">
+                <span className="brand-dot" />
+                MusePicker
+              </Link>
+              <nav className="site-nav" aria-label="Primary">
+                <Link href="/">Home</Link>
+                <Link href="/search">Search</Link>
+              </nav>
+            </div>
           </header>
           <main className="page-shell">{children}</main>
+          <footer className="site-footer">
+            <div className="footer-inner">
+              <div>
+                <p className="footer-brand">MusePicker</p>
+                <p className="footer-muted">Compare cultural ticket prices across booking platforms.</p>
+              </div>
+              <div className="footer-links">
+                <Link href="/">Home</Link>
+                <Link href="/search">Search</Link>
+                <Link href="mailto:yunboshim@gmail.com?subject=MusePicker%20City%20Request">Request a city</Link>
+              </div>
+            </div>
+          </footer>
         </Providers>
       </body>
     </html>
