@@ -1,0 +1,37 @@
+name: Deploy API (OIDC Template)
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Target environment"
+        required: true
+        type: choice
+        options:
+          - staging
+          - production
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS credentials via OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ap-northeast-2
+
+      - name: Build API image
+        run: |
+          docker build -t musepicker-api:${GITHUB_SHA} apps/api
+
+      - name: Deployment placeholder
+        run: |
+          echo "Implement ECS/EKS rollout here with environment protection enabled."

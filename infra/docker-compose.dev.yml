@@ -1,0 +1,63 @@
+version: "3.9"
+
+services:
+  db:
+    image: mysql:8.4
+    container_name: musepicker-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: musepicker
+      MYSQL_USER: musepicker
+      MYSQL_PASSWORD: musepicker
+    ports:
+      - "3306:3306"
+    volumes:
+      - musepicker_db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: ../apps/api
+      dockerfile: Dockerfile
+    container_name: musepicker-api
+    environment:
+      DB_URL: jdbc:mysql://db:3306/musepicker?useSSL=false&serverTimezone=UTC
+      DB_USERNAME: musepicker
+      DB_PASSWORD: musepicker
+      DB_DRIVER: com.mysql.cj.jdbc.Driver
+      CORS_ALLOWED_ORIGINS: http://localhost:3000
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  web:
+    build:
+      context: ../apps/web
+      dockerfile: Dockerfile
+    container_name: musepicker-web
+    environment:
+      API_BASE_URL: http://api:8080
+      NEXT_PUBLIC_API_BASE_URL: http://localhost:8080
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+
+  ingest:
+    build:
+      context: ../apps/ingest
+      dockerfile: Dockerfile
+    container_name: musepicker-ingest
+    command: ["python", "-m", "musepicker_ingest.pipeline.run_ingest", "--source", "klook", "--dry-run"]
+    volumes:
+      - musepicker_ingest_data:/app/.ingest-data
+
+volumes:
+  musepicker_db_data:
+  musepicker_ingest_data:

@@ -1,0 +1,16 @@
+[
+  {
+    "source_offer_id": "fallback-moma",
+    "source_activity_id": "moma-nyc",
+    "title": "MoMA Manual Scrape Offer",
+    "city": "New York",
+    "category": "Museums & Galleries",
+    "currency": "USD",
+    "base_price": "35.20",
+    "fee_amount": "0",
+    "discount_amount": "1.20",
+    "start_date": "2026-04-14",
+    "availability": 60,
+    "affiliate_url": "https://example.com/manual/moma"
+  }
+]

@@ -1,0 +1,26 @@
+[
+  {
+    "title": "The Museum of Modern Art Tickets",
+    "description": "Experience MoMA with online booking.",
+    "location": "11 W 53rd St, New York, NY 10019, United States",
+    "book_now_url": "https://www.ticketstodo.com/activity/book/331/?code=",
+    "list_url": "https://www.ticketstodo.com/new-york/the-museum-of-modern-art-tickets",
+    "pricing": {
+      "original_price": "42.00",
+      "discounted_price": "36.00",
+      "discount": "14% OFF"
+    }
+  },
+  {
+    "title": "9/11 Memorial & Museum Tickets",
+    "description": "Official partner tickets.",
+    "location": "180 Greenwich St, New York, NY 10007, USA",
+    "book_now_url": "https://www.ticketstodo.com/activity/book/380/?code=",
+    "list_url": "https://www.ticketstodo.com/new-york/911-memorial-museum-tickets",
+    "pricing": {
+      "original_price": "47.00",
+      "discounted_price": "39.00",
+      "discount": "17% OFF"
+    }
+  }
+]

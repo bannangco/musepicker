@@ -1,0 +1,18 @@
+{
+  "offers": [
+    {
+      "offer_id": "tripcom-moma-adult",
+      "activity_id": "moma-nyc",
+      "title": "MoMA General Admission",
+      "city": "New York",
+      "category": "Museums & Galleries",
+      "currency": "USD",
+      "base_price": 34.5,
+      "fee_amount": 1.2,
+      "discount_amount": 2.0,
+      "availability": 120,
+      "start_date": "2026-04-12",
+      "affiliate_url": "https://www.trip.com/travel-guide/attraction/new-york/the-metropolitan-museum-of-art-79044?Allianceid=5932886&SID=165183271"
+    }
+  ]
+}

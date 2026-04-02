@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://contracts.musepicker.com/schemas/raw-offer.schema.json",
+  "title": "RawOffer",
+  "type": "object",
+  "required": [
+    "source",
+    "source_offer_id",
+    "source_activity_id",
+    "title",
+    "currency",
+    "base_price",
+    "affiliate_url",
+    "observed_at"
+  ],
+  "properties": {
+    "source": { "type": "string" },
+    "source_offer_id": { "type": "string" },
+    "source_activity_id": { "type": "string" },
+    "title": { "type": "string" },
+    "city": { "type": ["string", "null"] },
+    "category": { "type": ["string", "null"] },
+    "currency": { "type": "string", "minLength": 3, "maxLength": 3 },
+    "base_price": { "type": "number", "minimum": 0 },
+    "fee_amount": { "type": "number", "minimum": 0, "default": 0 },
+    "discount_amount": { "type": "number", "minimum": 0, "default": 0 },
+    "availability": { "type": ["integer", "null"] },
+    "start_date": { "type": ["string", "null"], "format": "date" },
+    "affiliate_url": { "type": "string", "format": "uri" },
+    "metadata": { "type": "object" },
+    "observed_at": { "type": "string", "format": "date-time" }
+  }
+}

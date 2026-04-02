@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://contracts.musepicker.com/schemas/activity.schema.json",
+  "title": "ActivityCanonical",
+  "type": "object",
+  "required": ["id", "name", "city", "categories"],
+  "properties": {
+    "id": { "type": "string", "format": "uuid" },
+    "name": { "type": "string" },
+    "description": { "type": ["string", "null"] },
+    "city": { "type": "string" },
+    "state": { "type": ["string", "null"] },
+    "country": { "type": ["string", "null"] },
+    "categories": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "images": {
+      "type": "array",
+      "items": { "type": "string", "format": "uri" }
+    }
+  }
+}

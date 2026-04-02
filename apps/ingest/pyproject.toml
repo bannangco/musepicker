@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "musepicker-ingest"
+version = "0.1.0"
+description = "MusePicker ingestion workers (API-first adapters with scraper fallback)"
+requires-python = ">=3.9"
+dependencies = [
+  "requests>=2.32.0"
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0.0"
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["musepicker_ingest*"]

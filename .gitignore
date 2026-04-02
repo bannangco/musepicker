@@ -1,0 +1,41 @@
+# macOS
+.DS_Store
+
+# Node
+node_modules/
+.next/
+out/
+dist/
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+.ingest-data/
+snapshots/
+runs/
+metrics/
+state/
+
+# Java/Gradle
+.gradle/
+build/
+out/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Env
+.env
+.env.*
+
+# Logs
+*.log
+
+# Coverage
+coverage/
+.nyc_output/
+htmlcov/

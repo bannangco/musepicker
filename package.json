@@ -1,0 +1,14 @@
+{
+  "name": "musepicker-monorepo",
+  "private": true,
+  "workspaces": [
+    "apps/web"
+  ],
+  "scripts": {
+    "api:run": "cd apps/api && ./gradlew bootRun",
+    "api:test": "cd apps/api && ./gradlew test",
+    "web:dev": "npm --workspace apps/web run dev",
+    "web:build": "npm --workspace apps/web run build",
+    "ingest:test": "cd apps/ingest && PYTHONPATH=. pytest -q tests"
+  }
+}

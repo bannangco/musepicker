@@ -1,0 +1,20 @@
+{
+  "scrape_date": "2025-02-02T17:19:37.206972",
+  "total_museums": 2,
+  "museums": [
+    {
+      "title": "Museum of Modern Art (MoMA) Ticket in New York",
+      "url": "https://www.klook.com/activity/2954-museum-modern-art-new-york/",
+      "price": "US$ 22.50",
+      "rating": 4.8,
+      "reviews": 568
+    },
+    {
+      "title": "American Museum of Natural History Ticket",
+      "url": "https://www.klook.com/activity/127826-american-museum-of-natural-history-ticket/",
+      "price": "US$ 30.45",
+      "rating": null,
+      "reviews": 0
+    }
+  ]
+}

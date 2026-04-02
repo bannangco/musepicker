@@ -1,0 +1,18 @@
+{
+  "offers": [
+    {
+      "offer_id": "viator-moma-express",
+      "activity_id": "moma-nyc",
+      "title": "MoMA Fast Entry",
+      "city": "New York",
+      "category": "Museums & Galleries",
+      "currency": "USD",
+      "base_price": 38.0,
+      "fee_amount": 0.0,
+      "discount_amount": 3.0,
+      "availability": 75,
+      "start_date": "2026-04-13T10:00:00Z",
+      "affiliate_url": "https://www.viator.com/tours/New-York-City/MoMA-ticket/d687-1234P15"
+    }
+  ]
+}

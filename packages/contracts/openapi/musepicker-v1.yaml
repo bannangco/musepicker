@@ -1,0 +1,286 @@
+openapi: 3.1.0
+info:
+  title: MusePicker API
+  version: 1.0.0
+  description: Public API for MusePicker metasearch.
+servers:
+  - url: https://api.musepicker.com
+  - url: http://localhost:8080
+paths:
+  /api/regions/cities:
+    get:
+      summary: List searchable cities with counts and lowest prices
+      operationId: getRegionCities
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RegionCity'
+  /api/activities/trending:
+    get:
+      summary: Get trending activities
+      operationId: getTrendingActivities
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TrendingActivity'
+  /api/activities/search:
+    get:
+      summary: Search activities
+      operationId: searchActivities
+      parameters:
+        - in: query
+          name: city
+          schema:
+            type: string
+        - in: query
+          name: category
+          schema:
+            type: string
+        - in: query
+          name: query
+          schema:
+            type: string
+        - in: query
+          name: date
+          schema:
+            type: string
+            format: date
+        - in: query
+          name: pax
+          schema:
+            type: integer
+            minimum: 1
+        - in: query
+          name: page
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+        - in: query
+          name: size
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedActivitySearch'
+  /api/activities/{activityId}:
+    get:
+      summary: Get activity detail
+      operationId: getActivityById
+      parameters:
+        - in: path
+          name: activityId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActivityDetail'
+        '404':
+          description: Not found
+  /api/activities/{activityId}/offers:
+    get:
+      summary: Get activity offers sorted by deterministic price ranking
+      operationId: getActivityOffers
+      parameters:
+        - in: path
+          name: activityId
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - in: query
+          name: date
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Offer'
+  /api/platforms:
+    get:
+      summary: List enabled platforms
+      operationId: listPlatforms
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Platform'
+components:
+  schemas:
+    RegionCity:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        city:
+          type: string
+        state:
+          type: string
+        totalCount:
+          type: integer
+        categories:
+          type: array
+          items:
+            type: string
+        lowestPrice:
+          type: number
+      required: [id, city, totalCount, categories, lowestPrice]
+    TrendingActivity:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        image:
+          type: string
+        lowestPrice:
+          type: number
+        discountRate:
+          type: number
+      required: [id, name, image, lowestPrice, discountRate]
+    TicketPreview:
+      type: object
+      properties:
+        platformName:
+          type: string
+        price:
+          type: number
+      required: [platformName, price]
+    ActivitySearchItem:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        image:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        ticketTypeCount:
+          type: integer
+        platformCount:
+          type: integer
+        ticketPreview:
+          type: array
+          items:
+            $ref: '#/components/schemas/TicketPreview'
+      required: [id, name, city, ticketTypeCount, platformCount, ticketPreview]
+    PagedActivitySearch:
+      type: object
+      properties:
+        page:
+          type: integer
+        size:
+          type: integer
+        totalElements:
+          type: integer
+        totalPages:
+          type: integer
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ActivitySearchItem'
+      required: [page, size, totalElements, totalPages, items]
+    ActivityDetail:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        images:
+          type: array
+          items:
+            type: string
+        categories:
+          type: array
+          items:
+            type: string
+        region:
+          $ref: '#/components/schemas/RegionCity'
+      required: [id, name, images, categories, region]
+    Offer:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        activityId:
+          type: string
+          format: uuid
+        platform:
+          $ref: '#/components/schemas/Platform'
+        ticketType:
+          type: string
+        date:
+          type: string
+          format: date
+        basePrice:
+          type: number
+        feeAmount:
+          type: number
+        discountAmount:
+          type: number
+        effectivePrice:
+          type: number
+        affiliateUrl:
+          type: string
+          format: uri
+      required: [id, activityId, platform, ticketType, date, basePrice, feeAmount, discountAmount, effectivePrice, affiliateUrl]
+    Platform:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        code:
+          type: string
+        name:
+          type: string
+        homepageUrl:
+          type: string
+          format: uri
+      required: [id, code, name, homepageUrl]
