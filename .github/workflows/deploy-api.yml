@@ -1,37 +1,73 @@
-name: Deploy API (OIDC Template)
+name: Deploy API to OCI
 
 on:
+  push:
+    branches:
+      - main
+    paths:
+      - "apps/api/**"
+      - "infra/docker-compose.prod.yml"
+      - "infra/Caddyfile"
+      - "infra/env/**"
+      - "infra/scripts/deploy_api_oci.sh"
+      - ".github/workflows/deploy-api.yml"
   workflow_dispatch:
-    inputs:
-      environment:
-        description: "Target environment"
-        required: true
-        type: choice
-        options:
-          - staging
-          - production
 
 permissions:
-  id-token: write
   contents: read
+  id-token: write
+
+concurrency:
+  group: deploy-api-production
+  cancel-in-progress: false
 
 jobs:
   deploy:
+    name: Deploy API (OCI VM)
     runs-on: ubuntu-latest
-    environment: ${{ inputs.environment }}
+    environment: production
     steps:
       - uses: actions/checkout@v4
 
-      - name: Configure AWS credentials via OIDC
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
-          aws-region: ap-northeast-2
-
-      - name: Build API image
+      - name: Configure SSH key
+        env:
+          OCI_SSH_PRIVATE_KEY: ${{ secrets.OCI_SSH_PRIVATE_KEY }}
         run: |
-          docker build -t musepicker-api:${GITHUB_SHA} apps/api
+          set -euo pipefail
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          printf '%s\n' "$OCI_SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
 
-      - name: Deployment placeholder
+      - name: Configure known hosts
+        env:
+          OCI_KNOWN_HOSTS: ${{ secrets.OCI_KNOWN_HOSTS }}
+          OCI_HOST: ${{ secrets.OCI_HOST }}
         run: |
-          echo "Implement ECS/EKS rollout here with environment protection enabled."
+          set -euo pipefail
+          touch ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
+          if [ -n "$OCI_KNOWN_HOSTS" ]; then
+            printf '%s\n' "$OCI_KNOWN_HOSTS" >> ~/.ssh/known_hosts
+          else
+            ssh-keyscan -H "$OCI_HOST" >> ~/.ssh/known_hosts
+          fi
+
+      - name: Run remote deploy script
+        env:
+          OCI_HOST: ${{ secrets.OCI_HOST }}
+          OCI_USER: ${{ secrets.OCI_USER }}
+          OCI_DEPLOY_PATH: ${{ secrets.OCI_DEPLOY_PATH }}
+          OCI_REPO_URL: ${{ secrets.OCI_REPO_URL }}
+          OCI_DEPLOY_BRANCH: ${{ secrets.OCI_DEPLOY_BRANCH }}
+          OCI_API_HEALTH_URL: ${{ secrets.OCI_API_HEALTH_URL }}
+        run: |
+          set -euo pipefail
+          DEPLOY_ROOT="${OCI_DEPLOY_PATH:-/opt/musepicker}"
+          REPO_URL="${OCI_REPO_URL:-https://github.com/bannangco/musepicker.git}"
+          DEPLOY_BRANCH="${OCI_DEPLOY_BRANCH:-main}"
+          API_HEALTH_URL="${OCI_API_HEALTH_URL:-https://api.shimyunbo.com/api/healthz}"
+
+          ssh "${OCI_USER}@${OCI_HOST}" \
+            "export DEPLOY_ROOT='${DEPLOY_ROOT}' REPO_URL='${REPO_URL}' DEPLOY_BRANCH='${DEPLOY_BRANCH}' API_HEALTH_URL='${API_HEALTH_URL}'; bash -s" \
+            < infra/scripts/deploy_api_oci.sh

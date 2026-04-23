@@ -1,6 +1,6 @@
 import { getRegionCities, getTrendingActivities } from '@/lib/api';
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.musepicker.com';
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://musepicker.shimyunbo.com';
 
 export default async function sitemap() {
   const entries = [

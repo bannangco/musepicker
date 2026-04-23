@@ -35,6 +35,7 @@ cd apps/api
 - `GET /api/activities/{activityId}/offers`
 - `GET /api/platforms`
 - `GET /api/affiliate/out/{offerId}`
+- `GET /api/healthz`
 - `GET /api/mualba/activities`
 - `GET /api/admin/sources/health`
 - `GET /api/admin/mappings/review`

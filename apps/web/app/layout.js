@@ -16,6 +16,7 @@ const sans = Space_Grotesk({
 });
 
 export const metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://musepicker.shimyunbo.com'),
   title: 'MusePicker | Compare Museum and Activity Ticket Prices',
   description: 'MusePicker compares museum, gallery, theater, and attraction ticket offers across booking platforms.'
 };

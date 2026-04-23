@@ -32,6 +32,7 @@ Single DB now, split-ready later:
 
 ## API v1
 
+- `GET /api/healthz` (deployment/uptime health)
 - `GET /api/regions/cities`
 - `GET /api/activities/trending`
 - `GET /api/activities/search`
@@ -66,3 +67,9 @@ Compatibility aliases are retained for legacy consumers:
 - Removed exfiltration workflow from legacy backend.
 - Removed hardcoded DB/API secrets from legacy `application.properties`.
 - Added incident-response checklist in `SECURITY_INCIDENT_RESPONSE.md`.
+
+## First Launch Runtime (Test Domain)
+
+- Web: `https://musepicker.shimyunbo.com` on Vercel
+- API: `https://api.shimyunbo.com` on OCI VM (`mysql` + `api` + `caddy`)
+- DNS/edge: Cloudflare Free

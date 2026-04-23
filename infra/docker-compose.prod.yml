@@ -1,0 +1,59 @@
+version: "3.9"
+
+services:
+  db:
+    image: mysql:8.4
+    container_name: musepicker-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      TZ: ${MYSQL_TIMEZONE:-UTC}
+    volumes:
+      - musepicker_db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 15
+
+  api:
+    container_name: musepicker-api
+    build:
+      context: ../apps/api
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment:
+      PORT: ${PORT:-8080}
+      DB_URL: ${DB_URL:-jdbc:mysql://db:3306/musepicker?useSSL=false&serverTimezone=UTC}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_DRIVER: ${DB_DRIVER:-com.mysql.cj.jdbc.Driver}
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS}
+    depends_on:
+      db:
+        condition: service_healthy
+
+  caddy:
+    image: caddy:2.8-alpine
+    container_name: musepicker-caddy
+    restart: unless-stopped
+    depends_on:
+      - api
+    environment:
+      API_HOST: ${API_HOST:-api.shimyunbo.com}
+      ACME_EMAIL: ${ACME_EMAIL:-}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - musepicker_caddy_data:/data
+      - musepicker_caddy_config:/config
+
+volumes:
+  musepicker_db_data:
+  musepicker_caddy_data:
+  musepicker_caddy_config:

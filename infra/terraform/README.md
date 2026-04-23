@@ -1,18 +1,11 @@
-# Terraform Scaffold
+# Terraform Scaffold (Not Used In First Launch)
 
-This is a bootstrap scaffold for MusePicker infrastructure.
+The current first launch runs on Vercel + OCI VM with Docker Compose, not on this Terraform scaffold.
 
-## Intended Modules
+This directory remains a future IaC placeholder for a later migration to fully managed/provisioned infrastructure.
 
-- `network`: VPC, subnets, routing
-- `api_service`: ECS service for Spring API
-- `web_service`: ECS service or static hosting for Next.js
-- `ingest_jobs`: scheduled ECS tasks for source adapters
-- `database`: managed MySQL
-- `edge`: Cloudflare DNS/WAF/proxy config
+## Current Status
 
-## State & Secrets
-
-- Use remote state backend (S3 + DynamoDB lock) in real deployments.
-- Do not commit tfvars with credentials.
-- CI/CD should assume AWS role via GitHub OIDC.
+- No active production apply pipeline uses this Terraform code.
+- Keep credentials out of source control.
+- Treat this scaffold as draft-only until a dedicated IaC migration project starts.

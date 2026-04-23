@@ -2,6 +2,18 @@
 
 MusePicker is a metasearch platform for cultural activity tickets (museums, galleries, theatre, attractions) with price comparison and affiliate outbound routing.
 
+## First Launch Targets
+
+- Web (test): `https://musepicker.shimyunbo.com`
+- API (test): `https://api.shimyunbo.com`
+- Apex `shimyunbo.com`: unchanged during MusePicker test launch
+
+## Launch Stack (Free Tier)
+
+- Web: Vercel Hobby (`apps/web`)
+- API + DB: OCI Always Free VM + Docker Compose (`apps/api` + MySQL)
+- DNS/Edge: Cloudflare Free
+
 ## Repository Layout
 
 - `apps/web`: Next.js frontend (App Router, React Query, URL-driven filters)
@@ -93,3 +105,5 @@ python -m musepicker_ingest.pipeline.run_ingest --source klook --fixture tests/f
 - `docs/architecture.md`: rebuild architecture and reuse decisions
 - `docs/governance/`: policies, ADR, quality gates
 - `docs/operations/`: monitoring, launch gates, post-launch loop
+- `docs/operations/SHIMYUNBO_FIRST_LAUNCH.md`: DNS, Vercel, OCI, GitHub deploy setup checklist
+- `docs/PROJECT_CONTEXT.md`: long-lived project memory for new Codex/ChatGPT sessions

@@ -77,4 +77,12 @@ class ApiContractTest {
             .andExpect(jsonPath("$.source").value("tripcom"))
             .andExpect(jsonPath("$.sourceActivityId").value("tripcom-moma-1"));
     }
+
+    @Test
+    void healthzContract() throws Exception {
+        mockMvc.perform(get("/api/healthz"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.status").value("ok"))
+            .andExpect(jsonPath("$.service").value("musepicker-api"));
+    }
 }

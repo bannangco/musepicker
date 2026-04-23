@@ -1,23 +1,32 @@
 # Infra Blueprint
 
-This directory holds infrastructure and deployment scaffolding for the rebuilt MusePicker monorepo.
+This directory holds runtime/deployment artifacts for MusePicker first launch on `shimyunbo.com` test hosts.
 
-## Runtime Topology
+## Runtime Topology (Current)
 
-- **Cloudflare** in front of `web` and `api` (DNS, CDN, WAF, TLS termination).
-- **AWS** backend runtime:
-  - `apps/web`: containerized Next.js service (or static+edge mode based on final deployment choice).
-  - `apps/api`: containerized Spring Boot service.
-  - `apps/ingest`: scheduled container jobs (EventBridge + ECS/Fargate or equivalent).
-  - Managed MySQL (`core_*`, `mualba_*`, `source_*` schemas/tables).
+- **Cloudflare Free**
+  - DNS + edge proxy for `musepicker.shimyunbo.com` (Vercel) and `api.shimyunbo.com` (OCI origin)
+- **Vercel Hobby**
+  - Hosts `apps/web`
+- **OCI Always Free VM**
+  - Runs `infra/docker-compose.prod.yml`
+  - Services: `mysql`, `api`, `caddy`
+- **GitHub Actions**
+  - CI gate (`.github/workflows/ci.yml`)
+  - API deploy over SSH (`.github/workflows/deploy-api.yml`)
 
-## Files
+## Key Files
 
-- `docker-compose.dev.yml`: local compose stack (api + db + web + ingest runner).
-- `terraform/`: IaC scaffold for AWS + Cloudflare integration points.
+- `docker-compose.dev.yml`: local dev stack
+- `docker-compose.prod.yml`: OCI production stack for API + DB + Caddy
+- `Caddyfile`: HTTPS reverse proxy for `api.shimyunbo.com`
+- `env/*.example`: production env templates
+- `scripts/deploy_api_oci.sh`: remote deploy script used by GitHub Actions
+- `scripts/bootstrap_oci_host.sh`: host bootstrap helper script for Ubuntu OCI VMs
 
 ## Security Requirements
 
-- No static cloud credentials in repo.
-- GitHub Actions deploy workflows must use OIDC role assumption.
-- Protected environments required for `staging` and `production`.
+- No static secrets in repository.
+- Store deploy credentials in GitHub secrets.
+- Limit OCI ingress to only `22`, `80`, `443`.
+- Keep `main` branch protected and CI-required.

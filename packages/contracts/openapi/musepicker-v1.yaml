@@ -4,9 +4,24 @@ info:
   version: 1.0.0
   description: Public API for MusePicker activity-ticket metasearch.
 servers:
+  - url: https://api.shimyunbo.com
   - url: https://api.musepicker.com
   - url: http://localhost:8080
 paths:
+  /api/healthz:
+    get:
+      summary: Liveness/health endpoint for deployments and uptime checks
+      operationId: getHealthz
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthStatus'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
   /api/regions/cities:
     get:
       summary: List searchable cities with counts and lowest prices
@@ -337,6 +352,20 @@ components:
           schema:
             $ref: '#/components/schemas/ErrorEnvelope'
   schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+        service:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+      required:
+        - status
+        - service
+        - timestamp
     ErrorEnvelope:
       type: object
       properties:
