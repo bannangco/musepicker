@@ -5,7 +5,7 @@ MusePicker is a metasearch platform for cultural activity tickets (museums, gall
 ## First Launch Targets
 
 - Web (test): `https://musepicker.shimyunbo.com`
-- API (test): `https://api.shimyunbo.com`
+- API (test): `https://api.musepicker.shimyunbo.com`
 - Apex `shimyunbo.com`: unchanged during MusePicker test launch
 
 ## Launch Stack (Free Tier)

@@ -1,4 +1,4 @@
-{$API_HOST:api.shimyunbo.com} {
+{$API_HOST:api.musepicker.shimyunbo.com} {
   encode zstd gzip
 
   header {
@@ -10,3 +10,8 @@
 
   reverse_proxy api:8080
 }
+
+# Add future services as separate hostname blocks, for example:
+# other-service.shimyunbo.com {
+#   reverse_proxy other-service:8080
+# }

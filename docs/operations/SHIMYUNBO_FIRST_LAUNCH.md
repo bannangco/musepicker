@@ -3,7 +3,7 @@
 This runbook launches MusePicker test production on:
 
 - Web: `https://musepicker.shimyunbo.com`
-- API: `https://api.shimyunbo.com`
+- API: `https://api.musepicker.shimyunbo.com`
 
 `shimyunbo.com` apex remains unchanged.
 
@@ -16,9 +16,9 @@ In Cloudflare DNS for `shimyunbo.com`:
    - Target: Vercel-provided CNAME target
    - Proxy status: DNS only during initial Vercel validation, then Proxied
 2. Add `A` record:
-   - Name: `api`
+   - Name: `api.musepicker`
    - Value: OCI VM public IPv4
-   - Proxy status: Proxied
+   - Proxy status: DNS only while Caddy is first issuing TLS; Proxied after origin HTTPS works
 3. SSL/TLS mode:
    - Start with `Full` if origin certificate is not ready
    - Switch to `Full (strict)` after Caddy issues a valid cert
@@ -29,8 +29,8 @@ In Cloudflare DNS for `shimyunbo.com`:
 2. Set **Root Directory** to `apps/web`
 3. Set environment variables (Production and Preview):
    - `NEXT_PUBLIC_SITE_URL=https://musepicker.shimyunbo.com`
-   - `NEXT_PUBLIC_API_BASE_URL=https://api.shimyunbo.com`
-   - `API_BASE_URL=https://api.shimyunbo.com`
+   - `NEXT_PUBLIC_API_BASE_URL=https://api.musepicker.shimyunbo.com`
+   - `API_BASE_URL=https://api.musepicker.shimyunbo.com`
 4. Add custom domain: `musepicker.shimyunbo.com`
 5. Confirm automatic deployments from `main`
 
@@ -82,7 +82,7 @@ bash infra/scripts/deploy_api_oci.sh
 Verify:
 
 ```bash
-curl -i https://api.shimyunbo.com/api/healthz
+curl -i https://api.musepicker.shimyunbo.com/api/healthz
 ```
 
 ## 5. GitHub Secrets for API Deploy Workflow
@@ -96,7 +96,7 @@ Add repository secrets:
 - `OCI_DEPLOY_PATH`: `/opt/musepicker` (optional, defaults provided)
 - `OCI_REPO_URL`: `https://github.com/bannangco/musepicker.git` (optional)
 - `OCI_DEPLOY_BRANCH`: `main` (optional)
-- `OCI_API_HEALTH_URL`: `https://api.shimyunbo.com/api/healthz` (optional)
+- `OCI_API_HEALTH_URL`: `https://api.musepicker.shimyunbo.com/api/healthz` (optional)
 
 Then ensure branch protection for `main` requires `Monorepo CI` checks.
 
@@ -111,7 +111,11 @@ Then ensure branch protection for `main` requires `Monorepo CI` checks.
   - checks `/api/healthz`
   - stores failure logs under `/opt/musepicker/.deploy-logs`
 
-## 7. Smoke Test Checklist
+## 7. Multi-Service Routing on Oracle
+
+Use one shared Caddy entry point for all services on the instance. MusePicker API owns `api.musepicker.shimyunbo.com` and proxies to the internal Docker service `api:8080`. Future services should get their own hostnames and Caddy blocks that proxy to their own internal container names and ports.
+
+## 8. Smoke Test Checklist
 
 1. Web pages render:
    - `/`

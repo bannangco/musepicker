@@ -9,7 +9,7 @@ MusePicker is a metasearch platform for museum/gallery/theater/activity tickets.
 Current launch phase:
 
 - Public test domain: `musepicker.shimyunbo.com`
-- Public API domain: `api.shimyunbo.com`
+- Public API domain: `api.musepicker.shimyunbo.com`
 - Data source mode: seeded dummy data only (Flyway migrations)
 - Ingestion adapters/pipeline are scaffolded but not used for live data yet
 
@@ -99,6 +99,7 @@ Seed notes:
 - Services: `db` (MySQL), `api` (Spring Boot), `caddy` (TLS reverse proxy)
 - Proxy config: `infra/Caddyfile`
 - Env templates: `infra/env/*.example`
+- Multi-service rule: Caddy owns public `80/443`; every service gets its own hostname block and internal Docker target.
 
 ### CI/CD
 
@@ -106,7 +107,7 @@ Seed notes:
 - API deploy: `.github/workflows/deploy-api.yml`
   - trigger: push to `main` (API/infra deploy paths) + manual dispatch
   - action: SSH to OCI VM and run `infra/scripts/deploy_api_oci.sh`
-  - health gate: checks `https://api.shimyunbo.com/api/healthz`
+  - health gate: checks `https://api.musepicker.shimyunbo.com/api/healthz`
   - failure logs stored on host under `/opt/musepicker/.deploy-logs`
 
 ## 7. Environment Variable Matrix
@@ -114,8 +115,8 @@ Seed notes:
 ### `apps/web` (Vercel)
 
 - `NEXT_PUBLIC_SITE_URL=https://musepicker.shimyunbo.com`
-- `NEXT_PUBLIC_API_BASE_URL=https://api.shimyunbo.com`
-- `API_BASE_URL=https://api.shimyunbo.com`
+- `NEXT_PUBLIC_API_BASE_URL=https://api.musepicker.shimyunbo.com`
+- `API_BASE_URL=https://api.musepicker.shimyunbo.com`
 
 ### `apps/api` runtime
 

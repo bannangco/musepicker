@@ -43,7 +43,7 @@ services:
     depends_on:
       - api
     environment:
-      API_HOST: ${API_HOST:-api.shimyunbo.com}
+      API_HOST: ${API_HOST:-api.musepicker.shimyunbo.com}
       ACME_EMAIL: ${ACME_EMAIL:-}
     ports:
       - "80:80"

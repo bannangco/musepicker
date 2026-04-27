@@ -66,7 +66,7 @@ jobs:
           DEPLOY_ROOT="${OCI_DEPLOY_PATH:-/opt/musepicker}"
           REPO_URL="${OCI_REPO_URL:-https://github.com/bannangco/musepicker.git}"
           DEPLOY_BRANCH="${OCI_DEPLOY_BRANCH:-main}"
-          API_HEALTH_URL="${OCI_API_HEALTH_URL:-https://api.shimyunbo.com/api/healthz}"
+          API_HEALTH_URL="${OCI_API_HEALTH_URL:-https://api.musepicker.shimyunbo.com/api/healthz}"
 
           ssh "${OCI_USER}@${OCI_HOST}" \
             "export DEPLOY_ROOT='${DEPLOY_ROOT}' REPO_URL='${REPO_URL}' DEPLOY_BRANCH='${DEPLOY_BRANCH}' API_HEALTH_URL='${API_HEALTH_URL}'; bash -s" \

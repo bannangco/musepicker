@@ -71,5 +71,5 @@ Compatibility aliases are retained for legacy consumers:
 ## First Launch Runtime (Test Domain)
 
 - Web: `https://musepicker.shimyunbo.com` on Vercel
-- API: `https://api.shimyunbo.com` on OCI VM (`mysql` + `api` + `caddy`)
+- API: `https://api.musepicker.shimyunbo.com` on OCI VM (`mysql` + `api` + `caddy`)
 - DNS/edge: Cloudflare Free

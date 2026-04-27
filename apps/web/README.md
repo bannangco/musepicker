@@ -31,5 +31,5 @@ npm run dev
 ## Production Test Domain
 
 - `NEXT_PUBLIC_SITE_URL=https://musepicker.shimyunbo.com`
-- `NEXT_PUBLIC_API_BASE_URL=https://api.shimyunbo.com`
-- `API_BASE_URL=https://api.shimyunbo.com`
+- `NEXT_PUBLIC_API_BASE_URL=https://api.musepicker.shimyunbo.com`
+- `API_BASE_URL=https://api.musepicker.shimyunbo.com`
