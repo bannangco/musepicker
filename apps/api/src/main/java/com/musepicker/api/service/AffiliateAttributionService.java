@@ -103,7 +103,12 @@ public class AffiliateAttributionService {
         }
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromUri(destination);
-        params.forEach((key, value) -> builder.queryParamIfAbsent(key, value));
+        var existingParams = builder.build(true).getQueryParams();
+        params.forEach((key, value) -> {
+            if (!existingParams.containsKey(key)) {
+                builder.queryParam(key, value);
+            }
+        });
         return builder.build(true).toUriString();
     }
 

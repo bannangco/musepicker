@@ -135,3 +135,11 @@ Use one shared Caddy entry point for all services on the instance. MusePicker AP
 4. SEO baseline:
    - `/robots.txt` disallows `/admin`
    - `/sitemap.xml` lists test-domain URLs
+
+## 9. Troubleshooting
+
+If deploy fails with `fatal: couldn't find remote ref main`, the server is trying to deploy a branch that does not exist on GitHub. The deploy script now auto-detects the remote default branch when `DEPLOY_BRANCH` is not set. For GitHub Actions, set `OCI_DEPLOY_BRANCH` only if you intentionally want to pin a branch.
+
+If API Docker build fails at `compileJava`, fix the Java compiler error first, push the change, then rerun `bash infra/scripts/deploy_api_oci.sh`.
+
+If Cloudflare shows `The registrar services for this domain have been suspended by Cloudflare for a Terms of Service violation`, DNS changes will not fix the site. Resolve the domain suspension in Cloudflare Registrar/support first or temporarily use another working domain.
