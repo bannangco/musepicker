@@ -96,7 +96,7 @@ Add repository secrets:
 - `OCI_DEPLOY_PATH`: `/opt/musepicker` (optional, defaults provided)
 - `OCI_REPO_URL`: `https://github.com/bannangco/musepicker.git` (optional)
 - `OCI_DEPLOY_BRANCH`: default branch name, for example `master` or `main` (optional; omit to let the deploy script detect it)
-- `OCI_API_HEALTH_URL`: `https://api.musepicker.shimyunbo.com/api/healthz` (optional)
+- `OCI_API_HEALTH_URL`: `http://127.0.0.1:8080/api/healthz` (optional; omit to use this default)
 
 Then ensure branch protection for your default branch requires `Monorepo CI` checks.
 
@@ -108,7 +108,7 @@ Then ensure branch protection for your default branch requires `Monorepo CI` che
 - Remote script:
   - syncs branch
   - rebuilds/restarts compose stack
-  - checks `/api/healthz`
+  - checks local API health at `http://127.0.0.1:8080/api/healthz`
   - stores failure logs under `/opt/musepicker/.deploy-logs`
 
 ## 7. Multi-Service Routing on Oracle
@@ -141,5 +141,15 @@ Use one shared Caddy entry point for all services on the instance. MusePicker AP
 If deploy fails with `fatal: couldn't find remote ref main`, the server is trying to deploy a branch that does not exist on GitHub. The deploy script now auto-detects the remote default branch when `DEPLOY_BRANCH` is not set. For GitHub Actions, set `OCI_DEPLOY_BRANCH` only if you intentionally want to pin a branch.
 
 If API Docker build fails at `compileJava`, fix the Java compiler error first, push the change, then rerun `bash infra/scripts/deploy_api_oci.sh`.
+
+If deploy succeeds locally but public HTTPS fails with `sslv3 alert handshake failure`, separate API health from domain health:
+
+```bash
+curl -i http://127.0.0.1:8080/api/healthz
+curl -i http://127.0.0.1:8080/api/regions/cities
+docker logs musepicker-caddy --tail 100
+```
+
+If local API works, the remaining issue is DNS, Cloudflare proxy/TLS, Caddy certificate issuance, or domain registrar state.
 
 If Cloudflare shows `The registrar services for this domain have been suspended by Cloudflare for a Terms of Service violation`, DNS changes will not fix the site. Resolve the domain suspension in Cloudflare Registrar/support first or temporarily use another working domain.

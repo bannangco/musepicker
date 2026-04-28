@@ -107,7 +107,7 @@ Seed notes:
 - API deploy: `.github/workflows/deploy-api.yml`
   - trigger: push to `main` or `master` (API/infra deploy paths) + manual dispatch
   - action: SSH to OCI VM and run `infra/scripts/deploy_api_oci.sh`
-  - health gate: checks `https://api.musepicker.shimyunbo.com/api/healthz`
+  - health gate: checks `http://127.0.0.1:8080/api/healthz` on the OCI host
   - failure logs stored on host under `/opt/musepicker/.deploy-logs`
 
 ## 7. Environment Variable Matrix
