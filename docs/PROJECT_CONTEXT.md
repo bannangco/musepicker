@@ -121,7 +121,7 @@ Seed notes:
 ### `apps/api` runtime
 
 - `PORT=8080`
-- `DB_URL=jdbc:mysql://db:3306/musepicker?useSSL=false&serverTimezone=UTC`
+- `DB_URL=jdbc:mysql://db:3306/musepicker?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC`
 - `DB_USERNAME=musepicker`
 - `DB_PASSWORD=<secret>`
 - `DB_DRIVER=com.mysql.cj.jdbc.Driver`

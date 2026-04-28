@@ -67,6 +67,7 @@ cp infra/env/caddy.prod.env.example infra/env/caddy.prod.env
 ```
 
 Edit the copied `infra/env/*.env` files with real secrets.
+Keep `allowPublicKeyRetrieval=true` in `infra/env/api.prod.env` because MySQL 8.4 uses `caching_sha2_password` by default.
 
 If the GitHub repository is private, configure host-side Git access first:
 
@@ -141,6 +142,8 @@ Use one shared Caddy entry point for all services on the instance. MusePicker AP
 If deploy fails with `fatal: couldn't find remote ref main`, the server is trying to deploy a branch that does not exist on GitHub. The deploy script now auto-detects the remote default branch when `DEPLOY_BRANCH` is not set. For GitHub Actions, set `OCI_DEPLOY_BRANCH` only if you intentionally want to pin a branch.
 
 If API Docker build fails at `compileJava`, fix the Java compiler error first, push the change, then rerun `bash infra/scripts/deploy_api_oci.sh`.
+
+If API logs show `Public Key Retrieval is not allowed`, update `infra/env/api.prod.env` so `DB_URL` includes `allowPublicKeyRetrieval=true`, then rerun deploy.
 
 If deploy succeeds locally but public HTTPS fails with `sslv3 alert handshake failure`, separate API health from domain health:
 

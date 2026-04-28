@@ -27,7 +27,7 @@ services:
       - "127.0.0.1:8080:8080"
     environment:
       PORT: ${PORT:-8080}
-      DB_URL: ${DB_URL:-jdbc:mysql://db:3306/musepicker?useSSL=false&serverTimezone=UTC}
+      DB_URL: ${DB_URL:-jdbc:mysql://db:3306/musepicker?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC}
       DB_USERNAME: ${DB_USERNAME}
       DB_PASSWORD: ${DB_PASSWORD}
       DB_DRIVER: ${DB_DRIVER:-com.mysql.cj.jdbc.Driver}
