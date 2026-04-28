@@ -33,4 +33,4 @@ Caddy is the shared public entry point for the Oracle instance. Keep ports `80` 
 - No static secrets in repository.
 - Store deploy credentials in GitHub secrets.
 - Limit OCI ingress to only `22`, `80`, `443`.
-- Keep `main` branch protected and CI-required.
+- Keep the default branch protected and CI-required.

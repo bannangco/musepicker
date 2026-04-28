@@ -32,7 +32,7 @@ In Cloudflare DNS for `shimyunbo.com`:
    - `NEXT_PUBLIC_API_BASE_URL=https://api.musepicker.shimyunbo.com`
    - `API_BASE_URL=https://api.musepicker.shimyunbo.com`
 4. Add custom domain: `musepicker.shimyunbo.com`
-5. Confirm automatic deployments from `main`
+5. Confirm automatic deployments from your default branch (`master` in the current local repo, or `main` if you rename it later)
 
 ## 3. OCI VM Provisioning (Always Free)
 
@@ -95,15 +95,15 @@ Add repository secrets:
 - `OCI_KNOWN_HOSTS`: output from `ssh-keyscan -H <host>` (recommended)
 - `OCI_DEPLOY_PATH`: `/opt/musepicker` (optional, defaults provided)
 - `OCI_REPO_URL`: `https://github.com/bannangco/musepicker.git` (optional)
-- `OCI_DEPLOY_BRANCH`: `main` (optional)
+- `OCI_DEPLOY_BRANCH`: default branch name, for example `master` or `main` (optional; omit to let the deploy script detect it)
 - `OCI_API_HEALTH_URL`: `https://api.musepicker.shimyunbo.com/api/healthz` (optional)
 
-Then ensure branch protection for `main` requires `Monorepo CI` checks.
+Then ensure branch protection for your default branch requires `Monorepo CI` checks.
 
 ## 6. Deployment Automation Behavior
 
 - Workflow: `.github/workflows/deploy-api.yml`
-- Triggers on `main` when API/infra deploy files change
+- Triggers on `main` or `master` when API/infra deploy files change
 - Connects to OCI over SSH and runs `infra/scripts/deploy_api_oci.sh`
 - Remote script:
   - syncs branch

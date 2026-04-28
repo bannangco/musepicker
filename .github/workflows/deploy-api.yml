@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - master
     paths:
       - "apps/api/**"
       - "infra/docker-compose.prod.yml"
@@ -65,7 +66,7 @@ jobs:
           set -euo pipefail
           DEPLOY_ROOT="${OCI_DEPLOY_PATH:-/opt/musepicker}"
           REPO_URL="${OCI_REPO_URL:-https://github.com/bannangco/musepicker.git}"
-          DEPLOY_BRANCH="${OCI_DEPLOY_BRANCH:-main}"
+          DEPLOY_BRANCH="${OCI_DEPLOY_BRANCH:-${GITHUB_REF_NAME:-}}"
           API_HEALTH_URL="${OCI_API_HEALTH_URL:-https://api.musepicker.shimyunbo.com/api/healthz}"
 
           ssh "${OCI_USER}@${OCI_HOST}" \

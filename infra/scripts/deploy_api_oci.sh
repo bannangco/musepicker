@@ -3,7 +3,7 @@ set -euo pipefail
 
 DEPLOY_ROOT="${DEPLOY_ROOT:-/opt/musepicker}"
 REPO_URL="${REPO_URL:-https://github.com/bannangco/musepicker.git}"
-DEPLOY_BRANCH="${DEPLOY_BRANCH:-main}"
+DEPLOY_BRANCH="${DEPLOY_BRANCH:-}"
 COMPOSE_FILE="${COMPOSE_FILE:-infra/docker-compose.prod.yml}"
 API_HEALTH_URL="${API_HEALTH_URL:-https://api.musepicker.shimyunbo.com/api/healthz}"
 HEALTH_RETRIES="${HEALTH_RETRIES:-30}"
@@ -42,6 +42,21 @@ if [ ! -d "$DEPLOY_ROOT/.git" ]; then
 fi
 
 cd "$DEPLOY_ROOT"
+
+if [ -z "$DEPLOY_BRANCH" ]; then
+  DEPLOY_BRANCH="$(git ls-remote --symref origin HEAD 2>/dev/null | awk '/^ref:/ { sub("refs/heads/", "", $2); print $2; exit }')"
+fi
+
+if [ -z "$DEPLOY_BRANCH" ]; then
+  if git ls-remote --exit-code --heads origin main >/dev/null 2>&1; then
+    DEPLOY_BRANCH="main"
+  elif git ls-remote --exit-code --heads origin master >/dev/null 2>&1; then
+    DEPLOY_BRANCH="master"
+  else
+    echo "Could not determine deploy branch. Set DEPLOY_BRANCH or OCI_DEPLOY_BRANCH."
+    exit 1
+  fi
+fi
 
 echo "[deploy] syncing branch $DEPLOY_BRANCH"
 git fetch origin "$DEPLOY_BRANCH"

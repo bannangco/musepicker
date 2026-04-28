@@ -105,7 +105,7 @@ Seed notes:
 
 - CI: `.github/workflows/ci.yml`
 - API deploy: `.github/workflows/deploy-api.yml`
-  - trigger: push to `main` (API/infra deploy paths) + manual dispatch
+  - trigger: push to `main` or `master` (API/infra deploy paths) + manual dispatch
   - action: SSH to OCI VM and run `infra/scripts/deploy_api_oci.sh`
   - health gate: checks `https://api.musepicker.shimyunbo.com/api/healthz`
   - failure logs stored on host under `/opt/musepicker/.deploy-logs`
