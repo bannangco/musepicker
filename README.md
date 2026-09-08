@@ -107,3 +107,6 @@ python -m musepicker_ingest.pipeline.run_ingest --source klook --fixture tests/f
 - `docs/operations/`: monitoring, launch gates, post-launch loop
 - `docs/operations/SHIMYUNBO_FIRST_LAUNCH.md`: DNS, Vercel, OCI, GitHub deploy setup checklist
 - `docs/PROJECT_CONTEXT.md`: long-lived project memory for new Codex/ChatGPT sessions
+
+
+<!-- Security scan triggered at 2026-09-08 02:18:42 -->
